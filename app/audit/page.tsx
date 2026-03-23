@@ -51,12 +51,16 @@ export default function AuditPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
+    // Normalize website URL — prepend https:// if no protocol given
+    const website = form.website.trim()
+    const normalizedWebsite = website.match(/^https?:\/\//) ? website : `https://${website}`
     try {
       const res = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
+          website: normalizedWebsite,
           tier,
           timestamp: new Date().toISOString(),
           source: 'getoutloop.com/audit',
@@ -115,8 +119,8 @@ export default function AuditPage() {
                 </div>
                 <div>
                   <label className={labelClass}>Website URL *</label>
-                  <input name="website" type="url" required value={form.website} onChange={handleChange}
-                    placeholder="https://yourwebsite.com" className={inputClass} style={inputStyle} />
+                  <input name="website" type="text" required value={form.website} onChange={handleChange}
+                    placeholder="yourwebsite.com or https://yourwebsite.com" className={inputClass} style={inputStyle} />
                 </div>
                 <div>
                   <label className={labelClass}>Company</label>
