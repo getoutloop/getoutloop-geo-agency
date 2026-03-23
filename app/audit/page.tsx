@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { CheckCircle, AlertCircle } from 'lucide-react'
 
-const WEBHOOK_URL = 'https://n8n.getoutloop.cloud/webhook-test/getoutloop-contact'
+const WEBHOOK_URL = 'https://n8n.getoutloop.cloud/webhook/getoutloop-contact'
 
 const tierOptions = [
   { value: 'free', label: 'GEO Free — Score + top 5 issues (Free)' },
