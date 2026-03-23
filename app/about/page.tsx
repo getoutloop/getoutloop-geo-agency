@@ -153,15 +153,15 @@ export default function AboutPage() {
             <div className="flex justify-center">
               <div className="relative">
                 <div
-                  className="w-64 h-64 md:w-72 md:h-72 rounded-2xl overflow-hidden"
-                  style={{ border: '2px solid rgba(0,168,255,0.3)', boxShadow: '0 0 40px rgba(0,168,255,0.15)' }}
+                  className="w-64 md:w-72 rounded-2xl overflow-hidden"
+                  style={{ height: '420px', border: '2px solid rgba(0,168,255,0.3)', boxShadow: '0 0 40px rgba(0,168,255,0.15)' }}
                 >
                   <Image
                     src="/ronnel-besagre.png"
                     alt="Ronnel Besagre — Founder of GetOutLoop"
                     width={288}
-                    height={288}
-                    className="w-full h-full object-cover"
+                    height={420}
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
                 <div className="absolute -bottom-3 -right-3 glass-card electric-border px-3 py-2 text-xs font-syne font-semibold text-white">
