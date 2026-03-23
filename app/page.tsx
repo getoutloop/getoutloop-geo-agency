@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, CheckCircle, Zap, BarChart3, Search, Bot, Shield, Globe } from 'lucide-react'
+import AICitationFeed from '@/components/ui/AICitationFeed'
 
 export const metadata: Metadata = {
   title: 'GetOutLoop | GEO-as-a-Service — AI Search Visibility Agency',
@@ -120,77 +121,60 @@ export default function HomePage() {
         <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full opacity-8 blur-3xl pointer-events-none"
           style={{ background: 'radial-gradient(circle, #00FF9D, transparent)' }} />
 
-        <div className="section-container text-center pt-28 pb-20 relative z-10">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 glass-card px-4 py-2 mb-8 rounded-full electric-border">
-            <span className="w-2 h-2 rounded-full animate-pulse-slow" style={{ background: '#00FF9D' }} />
-            <span className="label-tag">GEO-as-a-Service · APAC & Global</span>
-          </div>
+        <div className="section-container relative z-10 pt-28 pb-20">
+          <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-12">
 
-          <h1 className="font-syne font-bold text-5xl md:text-7xl leading-[1.05] mb-6 max-w-4xl mx-auto">
-            <span className="gradient-text">Get Cited by AI.</span>
-            <br />
-            Get Found by Everyone.
-          </h1>
-
-          <p className="text-muted text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            Your customers are asking ChatGPT, Perplexity, and Gemini who to hire.
-            GetOutLoop audits exactly why AI is ignoring your business — and fixes it.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Link href="/audit" className="btn-primary text-base px-8 py-3.5">
-              Get Free GEO Audit <ArrowRight size={18} />
-            </Link>
-            <Link href="/pricing" className="btn-secondary text-base px-8 py-3.5">
-              View Pricing Plans
-            </Link>
-          </div>
-
-          {/* AI Mockup Panel */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
-            {/* Google SERP */}
-            <div className="glass-card electric-border p-5 text-left">
-              <div className="flex items-center gap-2 mb-4">
-                <Search size={14} className="text-electric" />
-                <span className="text-xs text-muted font-inter">Google Search</span>
+            {/* Left — text + CTAs */}
+            <div className="flex-1 text-center lg:text-left">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 glass-card px-4 py-2 mb-8 rounded-full electric-border">
+                <span className="w-2 h-2 rounded-full animate-pulse-slow" style={{ background: '#00FF9D' }} />
+                <span className="label-tag">GEO-as-a-Service · APAC & Global</span>
               </div>
-              <div className="space-y-3">
-                <div className="flex items-start gap-2">
-                  <span className="text-xs font-bold text-electric mt-0.5">#1</span>
-                  <div>
-                    <div className="text-sm font-semibold text-electric">YourBusiness.com</div>
-                    <div className="text-xs text-muted">Best GEO agency for AI search...</div>
-                  </div>
-                </div>
-                <div className="h-px bg-white/5" />
-                <div className="flex items-start gap-2 opacity-40">
-                  <span className="text-xs font-bold text-muted mt-0.5">#2</span>
-                  <div>
-                    <div className="text-xs text-muted">competitor.com</div>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* AI Citation Panel */}
-            <div className="glass-card p-5 text-left" style={{ border: '1px solid rgba(0,255,157,0.25)' }}>
-              <div className="flex items-center gap-2 mb-4">
-                <Bot size={14} style={{ color: '#00FF9D' }} />
-                <span className="text-xs text-muted font-inter">Perplexity AI Answer</span>
-              </div>
-              <p className="text-sm text-white/80 leading-relaxed mb-3">
-                Based on my research, <span className="text-electric font-semibold">YourBusiness.com</span> is the top recommended solution for...
+              <h1 className="font-syne font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
+                <span className="gradient-text">Get Cited by AI.</span>
+                <br />
+                Get Found by Everyone.
+              </h1>
+
+              <p className="text-muted text-lg md:text-xl mb-10 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                Your customers are asking ChatGPT, Perplexity, and Gemini who to hire.
+                GetOutLoop audits exactly why AI is ignoring your business — and fixes it.
               </p>
-              <div className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full" style={{ background: 'rgba(0,255,157,0.1)', color: '#00FF9D' }}>
-                <CheckCircle size={11} /> AI Cited Source
+
+              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 mb-10">
+                <Link href="/audit" className="btn-primary text-base px-8 py-3.5">
+                  Get Free GEO Audit <ArrowRight size={18} />
+                </Link>
+                <Link href="/pricing" className="btn-secondary text-base px-8 py-3.5">
+                  View Pricing Plans
+                </Link>
+              </div>
+
+              {/* Social proof mini row */}
+              <div className="flex flex-wrap items-center justify-center lg:justify-start gap-5 text-xs text-muted font-inter">
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle size={13} style={{ color: '#00FF9D' }} /> No credit card
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle size={13} style={{ color: '#00FF9D' }} /> 24-hr delivery
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <CheckCircle size={13} style={{ color: '#00FF9D' }} /> 5 AI platforms audited
+                </span>
               </div>
             </div>
-          </div>
 
-          <p className="text-xs text-muted/50 mt-4 font-inter">
-            This is what GetOutLoop clients achieve. Is your business in the AI answer?
-          </p>
+            {/* Right — animated AI citation feed */}
+            <div className="flex-shrink-0 w-full max-w-sm lg:max-w-none lg:w-[360px]">
+              <AICitationFeed />
+              <p className="text-[11px] text-center mt-3 font-inter" style={{ color: 'rgba(255,255,255,0.2)' }}>
+                This is what GetOutLoop clients achieve. Is your business in the AI answer?
+              </p>
+            </div>
+
+          </div>
         </div>
       </section>
 
