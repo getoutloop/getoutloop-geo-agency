@@ -1,0 +1,553 @@
+{
+  "name": "GetOutLoop — Self-Service GEO Audit Pipeline",
+  "nodes": [
+    {
+      "id": "node-1-webhook",
+      "name": "Webhook: /getoutloop-audit",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [200, 400],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "getoutloop-audit",
+        "responseMode": "onReceived",
+        "responseData": "allEntries",
+        "options": {
+          "allowedOrigins": "https://getoutloop.com"
+        }
+      },
+      "notes": "Receives POST from /audit page. Fields: name, email, company, website, tier (free|pro|complete), message, timestamp, source"
+    },
+    {
+      "id": "node-2-sheets-log",
+      "name": "Google Sheets — Log Audit Request",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [460, 400],
+      "parameters": {
+        "operation": "append",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Audit Requests",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row_ID": "={{ $json.timestamp + '_' + $json.email }}",
+            "Timestamp": "={{ $json.timestamp }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Company": "={{ $json.company }}",
+            "Website": "={{ $json.website }}",
+            "Tier": "={{ $json.tier }}",
+            "Message": "={{ $json.message }}",
+            "Source": "={{ $json.source }}",
+            "Status": "Received",
+            "Score": "",
+            "Grade": "",
+            "Report_Sent_At": ""
+          }
+        }
+      },
+      "notes": "Columns: Row_ID | Timestamp | Name | Email | Company | Website | Tier | Message | Source | Status | Score | Grade | Report_Sent_At"
+    },
+    {
+      "id": "node-2b-rate-limit",
+      "name": "Rate Limit Check — Same Email 30 Days",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [460, 220],
+      "parameters": {
+        "operation": "read",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Audit Requests",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "Email",
+              "condition": "isEqualTo",
+              "keyValue": "={{ $json.email }}"
+            }
+          ]
+        }
+      },
+      "notes": "Check if this email already has an audit in the last 30 days. If yes, branch to rate-limit response."
+    },
+    {
+      "id": "node-3-telegram",
+      "name": "Telegram — New Lead Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [720, 280],
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "text": "🚀 *New GEO Audit Request!*\n\n👤 *Name:* {{ $('Webhook: /getoutloop-audit').item.json.name }}\n📧 *Email:* {{ $('Webhook: /getoutloop-audit').item.json.email }}\n🏢 *Company:* {{ $('Webhook: /getoutloop-audit').item.json.company || 'Not provided' }}\n🌐 *Website:* {{ $('Webhook: /getoutloop-audit').item.json.website }}\n🎯 *Tier:* {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }}\n💬 *Message:* {{ $('Webhook: /getoutloop-audit').item.json.message || 'None' }}\n\n⏰ {{ $('Webhook: /getoutloop-audit').item.json.timestamp }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      }
+    },
+    {
+      "id": "node-4-if-tier",
+      "name": "IF Router — Free vs PRO/Complete",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [980, 400],
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "tier-check",
+              "leftValue": "={{ $('Webhook: /getoutloop-audit').item.json.tier }}",
+              "rightValue": "free",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "notes": "TRUE → Free audit path. FALSE → PRO/Complete audit path."
+    },
+    {
+      "id": "node-5a-claude-free",
+      "name": "Claude API — Free Audit (Sonnet)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1240, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "model": "claude-sonnet-4-6",
+          "max_tokens": 4000,
+          "system": "You are a GEO (Generative Engine Optimization) audit expert. When given a website URL, perform a quick 5-point audit of its AI search visibility. Return a JSON object ONLY — no markdown, no prose.\n\nReturn format:\n{\n  \"overall_score\": <number 0-100>,\n  \"grade\": <\"A\"|\"B\"|\"C\"|\"D\"|\"F\">,\n  \"summary\": \"<2-3 sentence plain English summary of the site's AI visibility status>\",\n  \"critical_issues\": [\n    {\n      \"issue\": \"<issue title>\",\n      \"severity\": \"<Critical|High|Medium|Low>\",\n      \"business_impact\": \"<1 sentence explaining what this costs the business>\",\n      \"quick_fix\": \"<1 sentence describing the fix>\"\n    }\n  ]\n}\n\ncritical_issues must contain exactly 5 items, ordered from highest to lowest severity.",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Perform a GEO Free Audit for this website: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n\nBusiness context:\n- Company: {{ $('Webhook: /getoutloop-audit').item.json.company || 'Not provided' }}\n- Owner message: {{ $('Webhook: /getoutloop-audit').item.json.message || 'None' }}\n\nCheck: (1) robots.txt AI crawler access, (2) structured data presence, (3) content citability signals, (4) E-E-A-T indicators, (5) llms.txt presence. Return the JSON audit result."
+            }
+          ]
+        }
+      },
+      "notes": "Model: claude-sonnet-4-6. Returns JSON with overall_score, grade, summary, critical_issues[5]."
+    },
+    {
+      "id": "node-5b-claude-pro",
+      "name": "Claude API — Full 8-Section Audit (Sonnet)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1240, 520],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "model": "claude-sonnet-4-6",
+          "max_tokens": 8000,
+          "system": "You are a senior GEO (Generative Engine Optimization) audit specialist. Perform a comprehensive 8-dimension audit. Return a JSON object ONLY — no markdown, no prose.\n\nReturn format:\n{\n  \"overall_score\": <number 0-100>,\n  \"grade\": <\"A\"|\"B\"|\"C\"|\"D\"|\"F\">,\n  \"executive_summary\": \"<3-4 sentence executive summary>\",\n  \"sections\": {\n    \"technical_crawler_access\": { \"score\": <0-15>, \"max\": 15, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"Critical|High|Medium|Low\", \"issue\": \"...\"}] },\n    \"structured_data\": { \"score\": <0-20>, \"max\": 20, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"...\", \"issue\": \"...\"}] },\n    \"content_citability\": { \"score\": <0-15>, \"max\": 15, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"...\", \"issue\": \"...\"}] },\n    \"eeat_signals\": { \"score\": <0-15>, \"max\": 15, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"...\", \"issue\": \"...\"}] },\n    \"brand_authority\": { \"score\": <0-10>, \"max\": 10, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"...\", \"issue\": \"...\"}] },\n    \"platform_citations\": { \"score\": <0-10>, \"max\": 10, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"...\", \"issue\": \"...\"}] },\n    \"llms_txt\": { \"score\": <0-5>, \"max\": 5, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"...\", \"issue\": \"...\"}] },\n    \"competitor_gap\": { \"score\": <0-10>, \"max\": 10, \"status\": \"<Pass|Fail|Partial>\", \"findings\": [\"...\"], \"issues\": [{\"severity\": \"...\", \"issue\": \"...\"}] }\n  },\n  \"priority_actions\": [\n    { \"rank\": 1, \"action\": \"...\", \"impact\": \"High|Medium|Low\", \"effort\": \"Easy|Medium|Hard\", \"timeline\": \"...\", \"dimension\": \"...\" }\n  ]\n}\n\npriority_actions must contain 8-12 items ordered by rank (impact/effort ratio).",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Perform a comprehensive GEO audit for: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n\nBusiness context:\n- Company: {{ $('Webhook: /getoutloop-audit').item.json.company || 'Not provided' }}\n- Tier: {{ $('Webhook: /getoutloop-audit').item.json.tier }}\n- Owner message: {{ $('Webhook: /getoutloop-audit').item.json.message || 'None' }}\n\nAudit all 8 dimensions: (1) Technical Crawler Access — check robots.txt for GPTBot/ClaudeBot/PerplexityBot/Google-Extended; (2) Structured Data — Organization/Person/Article/FAQ/Service JSON-LD; (3) Content Citability — definition blocks, stats, comparison tables, answer-format content; (4) E-E-A-T Signals — author credentials, expertise indicators, trust signals; (5) Brand Authority — external citations, directory listings, entity recognition; (6) Platform Citations — presence in ChatGPT, Perplexity, Claude, Gemini, Copilot; (7) llms.txt — file presence, quality, completeness; (8) Competitor Gap — what top competitors have that this site lacks.\n\nReturn the full JSON audit."
+            }
+          ]
+        }
+      },
+      "notes": "Model: claude-sonnet-4-6, max_tokens: 8000. Returns full 8-section audit JSON."
+    },
+    {
+      "id": "node-7a-haiku-email",
+      "name": "Claude Haiku — Free Email HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1500, 280],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "model": "claude-haiku-4-5-20251001",
+          "max_tokens": 3000,
+          "system": "You generate professional HTML email bodies for GEO audit reports. Use inline CSS only. Dark theme: background #0A0E27, text #B0B8C8, white for headings, #00A8FF for electric blue accents, #00FF9D for neon green. Mobile-friendly. No external fonts or images. Return raw HTML only — no markdown, no code fences.",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Generate a GEO Free Audit email for:\n- Name: {{ $('Webhook: /getoutloop-audit').item.json.name }}\n- Website: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n- Audit JSON: {{ JSON.stringify($('Claude API — Free Audit (Sonnet)').item.json.content[0].text) }}\n\nEmail must include:\n1. Header: GetOutLoop logo text + tagline 'Get Cited by AI. Get Found by Everyone.'\n2. Greeting: 'Hi [Name], your free GEO Audit for [website] is ready.'\n3. Score display: large score number + grade letter (color-coded: A/B=#00FF9D, C=#00A8FF, D/F=#FF5050)\n4. Summary paragraph\n5. Top 5 Critical Issues table: Issue | Severity (color-coded badge) | Business Impact\n6. Upgrade CTA box: 'Want the full 8-section report with fix guides? Upgrade to GEO PRO.' Button: 'View Pricing' linking to https://getoutloop.com/pricing\n7. Footer: GetOutLoop | rbesagre@gmail.com | https://getoutloop.com | Unsubscribe"
+            }
+          ]
+        }
+      },
+      "notes": "claude-haiku-4-5-20251001 — 25x cheaper than Sonnet for HTML formatting only. Returns mobile-friendly inline-CSS HTML."
+    },
+    {
+      "id": "node-7b-sonnet-markdown",
+      "name": "Claude Sonnet — PRO Report Markdown",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1500, 520],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $env.ANTHROPIC_API_KEY }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "model": "claude-sonnet-4-6",
+          "max_tokens": 6000,
+          "system": "You convert GEO audit JSON data into a professional HTML report for PDF generation. Use inline CSS. Professional design: white background #FFFFFF, dark navy headings #0A0E27, electric blue #00A8FF accents, neon green #00FF9D for passing scores. Include: cover page, executive summary, 8 scored sections with findings and issues, priority action matrix table, methodology note. Return raw HTML only — no markdown, no code fences.",
+          "messages": [
+            {
+              "role": "user",
+              "content": "Generate a full GEO {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }} Report HTML for:\n- Client: {{ $('Webhook: /getoutloop-audit').item.json.name }} ({{ $('Webhook: /getoutloop-audit').item.json.company || $('Webhook: /getoutloop-audit').item.json.website }})\n- Website: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n- Audit Date: {{ $now.format('MMMM D, YYYY') }}\n- Audit JSON: {{ JSON.stringify($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text) }}\n\nReport sections:\n1. Cover page: GetOutLoop logo text, 'GEO Audit Report', client name, website, date, tier badge\n2. Executive Summary with overall score gauge visual (CSS circle) and grade\n3. Section scores table: all 8 dimensions with score/max, status badge, key findings\n4. Each dimension detail: score bar, findings list, issues with severity badges\n5. Priority Action Matrix table: Rank | Action | Impact | Effort | Timeline | Dimension\n6. Methodology: brief explanation of 8-dimension GEO audit framework\n7. Footer: Prepared by GetOutLoop | getoutloop.com | rbesagre@gmail.com | Confidential"
+            }
+          ]
+        }
+      },
+      "notes": "Generates full HTML report for PDFShift conversion. PRO and Complete tiers."
+    },
+    {
+      "id": "node-7c-pdfshift",
+      "name": "PDFShift — HTML to PDF",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1760, 520],
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.pdfshift.io/v3/convert/html",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBasicAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": {
+          "source": "={{ $('Claude Sonnet — PRO Report Markdown').item.json.content[0].text }}",
+          "format": "A4",
+          "margin": { "top": "15mm", "right": "15mm", "bottom": "15mm", "left": "15mm" },
+          "filename": "GetOutLoop-GEO-Audit-{{ $('Webhook: /getoutloop-audit').item.json.website.replace('https://', '').replace('http://', '').replace('/', '') }}-{{ $now.format('YYYY-MM-DD') }}.pdf"
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "notes": "PDFShift API at $9/mo for 50 PDFs. Returns binary PDF. Auth: HTTP Basic with api_key as username, empty password."
+    },
+    {
+      "id": "node-8-telegram-hitl",
+      "name": "Telegram — HITL Review (PRO/Complete)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [2020, 520],
+      "parameters": {
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "text": "📊 *GEO {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }} Report Ready — Review Before Send*\n\n👤 {{ $('Webhook: /getoutloop-audit').item.json.name }}\n📧 {{ $('Webhook: /getoutloop-audit').item.json.email }}\n🌐 {{ $('Webhook: /getoutloop-audit').item.json.website }}\n\n🏆 *Score:* {{ JSON.parse($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text).overall_score }}/100 ({{ JSON.parse($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text).grade }})\n\n⏱ Auto-approves in 2 hours if no action taken.",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "notes": "Sends PDF to Telegram for manual review. 2-hour Wait node auto-approves."
+    },
+    {
+      "id": "node-8b-wait",
+      "name": "Wait — 2hr Auto-Approve",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [2020, 660],
+      "parameters": {
+        "resume": "timeInterval",
+        "options": {}
+      },
+      "notes": "2-hour window for manual Telegram review. After timeout, auto-proceeds to email send."
+    },
+    {
+      "id": "node-9a-gmail-free",
+      "name": "Gmail — Send Free Audit Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1760, 280],
+      "parameters": {
+        "sendTo": "={{ $('Webhook: /getoutloop-audit').item.json.email }}",
+        "subject": "Your Free GEO Audit — {{ $('Webhook: /getoutloop-audit').item.json.website }} (Score: {{ JSON.parse($('Claude API — Free Audit (Sonnet)').item.json.content[0].text).overall_score }}/100)",
+        "emailType": "html",
+        "message": "={{ $('Claude Haiku — Free Email HTML').item.json.content[0].text }}",
+        "options": {
+          "replyTo": "rbesagre@gmail.com",
+          "appendAttribution": false
+        }
+      },
+      "notes": "Sends HTML-only email for Free tier. No PDF attachment."
+    },
+    {
+      "id": "node-9b-gmail-pro",
+      "name": "Gmail — Send PRO Report + PDF",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [2280, 520],
+      "parameters": {
+        "sendTo": "={{ $('Webhook: /getoutloop-audit').item.json.email }}",
+        "subject": "Your GEO {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }} Audit Report — {{ $('Webhook: /getoutloop-audit').item.json.website }}",
+        "emailType": "html",
+        "message": "<p style=\"font-family:sans-serif;color:#333;\">Hi {{ $('Webhook: /getoutloop-audit').item.json.name }},</p><p style=\"font-family:sans-serif;color:#333;\">Your GEO {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }} Audit Report for <strong>{{ $('Webhook: /getoutloop-audit').item.json.website }}</strong> is attached as a PDF.</p><p style=\"font-family:sans-serif;color:#333;\">Overall Score: <strong>{{ JSON.parse($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text).overall_score }}/100</strong></p><p style=\"font-family:sans-serif;color:#333;\">Review the Priority Action Matrix on page 5 — that's your implementation roadmap.</p><p style=\"font-family:sans-serif;color:#333;\">Reply to this email if you have questions.<br><br>Ronnel Besagre<br>GetOutLoop | <a href=\"https://getoutloop.com\">getoutloop.com</a></p>",
+        "options": {
+          "replyTo": "rbesagre@gmail.com",
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {
+                "property": "data"
+              }
+            ]
+          }
+        }
+      },
+      "notes": "Sends email with PDF attachment for PRO/Complete tier."
+    },
+    {
+      "id": "node-10a-sheets-update-free",
+      "name": "Sheets — Update Status (Free)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [2020, 280],
+      "parameters": {
+        "operation": "update",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Audit Requests",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row_ID": "={{ $('Webhook: /getoutloop-audit').item.json.timestamp + '_' + $('Webhook: /getoutloop-audit').item.json.email }}",
+            "Status": "Report Sent",
+            "Score": "={{ JSON.parse($('Claude API — Free Audit (Sonnet)').item.json.content[0].text).overall_score }}",
+            "Grade": "={{ JSON.parse($('Claude API — Free Audit (Sonnet)').item.json.content[0].text).grade }}",
+            "Report_Sent_At": "={{ $now.toISO() }}"
+          }
+        },
+        "options": {
+          "locationDefine": {
+            "values": {
+              "columnToMatchOn": "Row_ID"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node-10b-sheets-update-pro",
+      "name": "Sheets — Update Status (PRO/Complete)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [2540, 520],
+      "parameters": {
+        "operation": "update",
+        "documentId": "YOUR_GOOGLE_SHEET_ID",
+        "sheetName": "Audit Requests",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Row_ID": "={{ $('Webhook: /getoutloop-audit').item.json.timestamp + '_' + $('Webhook: /getoutloop-audit').item.json.email }}",
+            "Status": "Report Sent",
+            "Score": "={{ JSON.parse($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text).overall_score }}",
+            "Grade": "={{ JSON.parse($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text).grade }}",
+            "Report_Sent_At": "={{ $now.toISO() }}"
+          }
+        },
+        "options": {
+          "locationDefine": {
+            "values": {
+              "columnToMatchOn": "Row_ID"
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "node-11-drive",
+      "name": "Google Drive — Save PDF Report",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2540, 660],
+      "parameters": {
+        "operation": "upload",
+        "name": "=GEO-{{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }}-{{ $('Webhook: /getoutloop-audit').item.json.website.replace('https://', '').replace('http://', '').replace('/', '') }}-{{ $now.format('YYYY-MM-DD') }}.pdf",
+        "folderId": "YOUR_GOOGLE_DRIVE_FOLDER_ID",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "options": {}
+      },
+      "notes": "Saves PDF to Google Drive folder for client record-keeping."
+    }
+  ],
+  "connections": {
+    "Webhook: /getoutloop-audit": {
+      "main": [
+        [
+          { "node": "Google Sheets — Log Audit Request", "type": "main", "index": 0 },
+          { "node": "Telegram — New Lead Alert", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Google Sheets — Log Audit Request": {
+      "main": [
+        [
+          { "node": "IF Router — Free vs PRO/Complete", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Telegram — New Lead Alert": {
+      "main": [
+        [
+          { "node": "IF Router — Free vs PRO/Complete", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "IF Router — Free vs PRO/Complete": {
+      "main": [
+        [
+          { "node": "Claude API — Free Audit (Sonnet)", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Claude API — Full 8-Section Audit (Sonnet)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Claude API — Free Audit (Sonnet)": {
+      "main": [
+        [
+          { "node": "Claude Haiku — Free Email HTML", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Claude Haiku — Free Email HTML": {
+      "main": [
+        [
+          { "node": "Gmail — Send Free Audit Email", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Gmail — Send Free Audit Email": {
+      "main": [
+        [
+          { "node": "Sheets — Update Status (Free)", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Claude API — Full 8-Section Audit (Sonnet)": {
+      "main": [
+        [
+          { "node": "Claude Sonnet — PRO Report Markdown", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Claude Sonnet — PRO Report Markdown": {
+      "main": [
+        [
+          { "node": "PDFShift — HTML to PDF", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "PDFShift — HTML to PDF": {
+      "main": [
+        [
+          { "node": "Telegram — HITL Review (PRO/Complete)", "type": "main", "index": 0 },
+          { "node": "Wait — 2hr Auto-Approve", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Wait — 2hr Auto-Approve": {
+      "main": [
+        [
+          { "node": "Gmail — Send PRO Report + PDF", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Gmail — Send PRO Report + PDF": {
+      "main": [
+        [
+          { "node": "Sheets — Update Status (PRO/Complete)", "type": "main", "index": 0 },
+          { "node": "Google Drive — Save PDF Report", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": ""
+  },
+  "meta": {
+    "templateId": "getoutloop-audit-pipeline-v1",
+    "description": "GetOutLoop self-service GEO audit pipeline. Free tier: Claude Sonnet audit → Claude Haiku email HTML → Gmail. PRO/Complete tier: Claude Sonnet full 8-section audit → Claude Sonnet HTML report → PDFShift PDF → Telegram HITL (2hr auto-approve) → Gmail with attachment → Google Drive save."
+  },
+  "_setup_notes": {
+    "credentials_required": [
+      "Google Sheets OAuth2 — connect your Google account",
+      "Gmail OAuth2 — connect rbesagre@gmail.com",
+      "Telegram Bot — YOUR_TELEGRAM_CHAT_ID from @userinfobot",
+      "Google Drive OAuth2 — same Google account as Sheets",
+      "PDFShift HTTP Basic Auth — api_key as username, empty password"
+    ],
+    "env_vars": {
+      "ANTHROPIC_API_KEY": "sk-ant-... (from console.anthropic.com)"
+    },
+    "google_sheets_columns": [
+      "Row_ID", "Timestamp", "Name", "Email", "Company", "Website",
+      "Tier", "Message", "Source", "Status", "Score", "Grade", "Report_Sent_At"
+    ],
+    "google_drive_folder": "Create a folder named 'GEO Audit Reports' in Drive and paste its folder ID",
+    "pdfshift_plan": "$9/mo Basic — 50 PDFs/mo. Upgrade to $29/mo Growth for 250 PDFs when PRO subscribers exceed ~20.",
+    "webhook_url_for_audit_form": "Copy the production webhook URL from n8n and paste into GetOutLoop-GEO AGENCY/app/audit/page.tsx WEBHOOK_URL constant",
+    "rate_limit_node": "node-2b-rate-limit is a reference node — implement as a Code node or IF node comparing lastAuditDate to $now.minus(30, 'days')"
+  }
+}
