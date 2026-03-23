@@ -29,6 +29,9 @@ export const metadata: Metadata = {
   authors: [{ name: 'Ronnel Besagre', url: 'https://getoutloop.com/about' }],
   creator: 'Ronnel Besagre',
   publisher: 'GetOutLoop',
+  verification: {
+    google: 'sq1CTFuoIIwBgmeNmcgwYKKVpTzJwZZrgL4pFgXEDxA',
+  },
   robots: {
     index: true,
     follow: true,
