@@ -206,7 +206,7 @@
           "messages": [
             {
               "role": "user",
-              "content": "Generate a GEO Free Audit email for:\n- Name: {{ $('Webhook: /getoutloop-audit').item.json.name }}\n- Website: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n- Audit JSON: {{ JSON.stringify($('Claude API — Free Audit (Sonnet)').item.json.content[0].text) }}\n\nEmail must include:\n1. Header: GetOutLoop logo text + tagline 'Get Cited by AI. Get Found by Everyone.'\n2. Greeting: 'Hi [Name], your free GEO Audit for [website] is ready.'\n3. Score display: large score number + grade letter (color-coded: A/B=#00FF9D, C=#00A8FF, D/F=#FF5050)\n4. Summary paragraph\n5. Top 5 Critical Issues table: Issue | Severity (color-coded badge) | Business Impact\n6. Upgrade CTA box: 'Want the full 8-section report with fix guides? Upgrade to GEO PRO.' Button: 'View Pricing' linking to https://getoutloop.com/pricing\n7. Footer: GetOutLoop | rbesagre@gmail.com | https://getoutloop.com | Unsubscribe"
+              "content": "Generate a GEO Free Audit email for:\n- Name: {{ $('Webhook: /getoutloop-audit').item.json.name }}\n- Website: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n- Audit JSON: {{ JSON.stringify($('Claude API — Free Audit (Sonnet)').item.json.content[0].text) }}\n\nEmail must include:\n1. Header: GetOutLoop logo text + tagline 'Get Cited by AI. Get Found by Everyone.'\n2. Greeting: 'Hi [Name], your free GEO Audit for [website] is ready.'\n3. Score display: large score number + grade letter (color-coded: A/B=#00FF9D, C=#00A8FF, D/F=#FF5050)\n4. Summary paragraph\n5. Top 5 Critical Issues table: Issue | Severity (color-coded badge) | Business Impact\n6. Upgrade CTA box: 'Want the full 8-section report with fix guides? Upgrade to GEO PRO.' Button: 'View Pricing' linking to https://getoutloop.com/pricing\n7. Footer: GetOutLoop | support@getoutloop.com | https://getoutloop.com | Unsubscribe"
             }
           ]
         }
@@ -239,7 +239,7 @@
           "messages": [
             {
               "role": "user",
-              "content": "Generate a full GEO {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }} Report HTML for:\n- Client: {{ $('Webhook: /getoutloop-audit').item.json.name }} ({{ $('Webhook: /getoutloop-audit').item.json.company || $('Webhook: /getoutloop-audit').item.json.website }})\n- Website: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n- Audit Date: {{ $now.format('MMMM D, YYYY') }}\n- Audit JSON: {{ JSON.stringify($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text) }}\n\nReport sections:\n1. Cover page: GetOutLoop logo text, 'GEO Audit Report', client name, website, date, tier badge\n2. Executive Summary with overall score gauge visual (CSS circle) and grade\n3. Section scores table: all 8 dimensions with score/max, status badge, key findings\n4. Each dimension detail: score bar, findings list, issues with severity badges\n5. Priority Action Matrix table: Rank | Action | Impact | Effort | Timeline | Dimension\n6. Methodology: brief explanation of 8-dimension GEO audit framework\n7. Footer: Prepared by GetOutLoop | getoutloop.com | rbesagre@gmail.com | Confidential"
+              "content": "Generate a full GEO {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }} Report HTML for:\n- Client: {{ $('Webhook: /getoutloop-audit').item.json.name }} ({{ $('Webhook: /getoutloop-audit').item.json.company || $('Webhook: /getoutloop-audit').item.json.website }})\n- Website: {{ $('Webhook: /getoutloop-audit').item.json.website }}\n- Audit Date: {{ $now.format('MMMM D, YYYY') }}\n- Audit JSON: {{ JSON.stringify($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text) }}\n\nReport sections:\n1. Cover page: GetOutLoop logo text, 'GEO Audit Report', client name, website, date, tier badge\n2. Executive Summary with overall score gauge visual (CSS circle) and grade\n3. Section scores table: all 8 dimensions with score/max, status badge, key findings\n4. Each dimension detail: score bar, findings list, issues with severity badges\n5. Priority Action Matrix table: Rank | Action | Impact | Effort | Timeline | Dimension\n6. Methodology: brief explanation of 8-dimension GEO audit framework\n7. Footer: Prepared by GetOutLoop | getoutloop.com | support@getoutloop.com | Confidential"
             }
           ]
         }
@@ -322,7 +322,7 @@
         "emailType": "html",
         "message": "={{ $('Claude Haiku — Free Email HTML').item.json.content[0].text }}",
         "options": {
-          "replyTo": "rbesagre@gmail.com",
+          "replyTo": "support@getoutloop.com",
           "appendAttribution": false
         }
       },
@@ -340,7 +340,7 @@
         "emailType": "html",
         "message": "<p style=\"font-family:sans-serif;color:#333;\">Hi {{ $('Webhook: /getoutloop-audit').item.json.name }},</p><p style=\"font-family:sans-serif;color:#333;\">Your GEO {{ $('Webhook: /getoutloop-audit').item.json.tier.toUpperCase() }} Audit Report for <strong>{{ $('Webhook: /getoutloop-audit').item.json.website }}</strong> is attached as a PDF.</p><p style=\"font-family:sans-serif;color:#333;\">Overall Score: <strong>{{ JSON.parse($('Claude API — Full 8-Section Audit (Sonnet)').item.json.content[0].text).overall_score }}/100</strong></p><p style=\"font-family:sans-serif;color:#333;\">Review the Priority Action Matrix on page 5 — that's your implementation roadmap.</p><p style=\"font-family:sans-serif;color:#333;\">Reply to this email if you have questions.<br><br>Ronnel Besagre<br>GetOutLoop | <a href=\"https://getoutloop.com\">getoutloop.com</a></p>",
         "options": {
-          "replyTo": "rbesagre@gmail.com",
+          "replyTo": "support@getoutloop.com",
           "appendAttribution": false,
           "attachmentsUi": {
             "attachmentsBinary": [
@@ -533,7 +533,7 @@
   "_setup_notes": {
     "credentials_required": [
       "Google Sheets OAuth2 — connect your Google account",
-      "Gmail OAuth2 — connect rbesagre@gmail.com",
+      "Gmail OAuth2 — connect support@getoutloop.com",
       "Telegram Bot — YOUR_TELEGRAM_CHAT_ID from @userinfobot",
       "Google Drive OAuth2 — same Google account as Sheets",
       "PDFShift HTTP Basic Auth — api_key as username, empty password"

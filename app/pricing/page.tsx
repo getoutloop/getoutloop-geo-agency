@@ -84,7 +84,7 @@ const faqs = [
   { q: 'Can I upgrade from Free to PRO?', a: 'Yes, at any time. Simply submit your site again via the audit form and select GEO PRO. We will apply any insights from your Free audit to the paid report.' },
   { q: 'Is the GEO score accurate for my industry?', a: 'Yes. The 8-dimension GEO audit framework is industry-agnostic. It scores technical, schema, content, E-E-A-T, brand authority, platform citations, llms.txt, and competitor gap — all of which apply to any business type.' },
   { q: 'What is included in the PDF report?', a: 'The PDF covers all 8 GEO audit dimensions with individual scores, a complete issue list with severity ratings (Critical/High/Medium/Low), a priority action matrix ranked by impact, and an executive summary with overall GEO score and grade.' },
-  { q: 'Do you offer annual pricing?', a: 'Yes — contact us for annual billing. Annual PRO is $1,080/yr (save $360). Annual Complete is $4,320/yr (save $1,440). Email rbesagre@gmail.com to arrange.' },
+  { q: 'Do you offer annual pricing?', a: 'Yes — contact us for annual billing. Annual PRO is $1,080/yr (save $360). Annual Complete is $4,320/yr (save $1,440). Email support@getoutloop.com to arrange.' },
 ]
 
 export default function PricingPage() {

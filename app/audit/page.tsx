@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { CheckCircle, AlertCircle } from 'lucide-react'
 
-const WEBHOOK_URL = 'https://n8n.getoutloop.cloud/webhook/getoutloop-audit'
+const WEBHOOK_URL = 'https://n8n.getoutloop.cloud/webhook-test/getoutloop-contact'
 
 const tierOptions = [
   { value: 'free', label: 'GEO Free — Score + top 5 issues (Free)' },
@@ -97,7 +97,7 @@ export default function AuditPage() {
                     ? 'Your free GEO audit report will be delivered to your email within 24 hours.'
                     : 'Your GEO audit is queued. Expect your full PDF report within 48 hours.'}
                 </p>
-                <p className="text-muted text-sm mt-4">Questions? Email <a href="mailto:rbesagre@gmail.com" className="text-electric">rbesagre@gmail.com</a></p>
+                <p className="text-muted text-sm mt-4">Questions? Email <a href="mailto:support@getoutloop.com" className="text-electric">support@getoutloop.com</a></p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -147,7 +147,7 @@ export default function AuditPage() {
 
                 {status === 'error' && (
                   <div className="flex items-center gap-2 p-3 rounded-lg text-sm" style={{ background: 'rgba(255,80,80,0.1)', border: '1px solid rgba(255,80,80,0.3)', color: '#FF5050' }}>
-                    <AlertCircle size={16} /> Error submitting. Please email <a href="mailto:rbesagre@gmail.com" className="underline ml-1">rbesagre@gmail.com</a> directly.
+                    <AlertCircle size={16} /> Error submitting. Please email <a href="mailto:support@getoutloop.com" className="underline ml-1">support@getoutloop.com</a> directly.
                   </div>
                 )}
 
@@ -194,7 +194,7 @@ export default function AuditPage() {
             <div className="glass-card p-6">
               <p className="text-muted text-sm leading-relaxed">
                 Questions? Contact{' '}
-                <a href="mailto:rbesagre@gmail.com" className="text-electric hover:underline">rbesagre@gmail.com</a>
+                <a href="mailto:support@getoutloop.com" className="text-electric hover:underline">support@getoutloop.com</a>
                 {' '}or WhatsApp{' '}
                 <a href="https://wa.me/60174980981" className="text-electric hover:underline">+60 174 980 981</a>
               </p>

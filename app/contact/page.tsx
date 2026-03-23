@@ -106,7 +106,7 @@ export default function ContactPage() {
                 {status === 'error' && (
                   <div className="flex items-center gap-2 p-3 rounded-lg text-sm"
                     style={{ background: 'rgba(255,80,80,0.1)', border: '1px solid rgba(255,80,80,0.3)', color: '#FF5050' }}>
-                    <AlertCircle size={16} /> Error sending. Email <a href="mailto:rbesagre@gmail.com" className="underline ml-1">rbesagre@gmail.com</a> directly.
+                    <AlertCircle size={16} /> Error sending. Email <a href="mailto:support@getoutloop.com" className="underline ml-1">support@getoutloop.com</a> directly.
                   </div>
                 )}
 
@@ -125,7 +125,7 @@ export default function ContactPage() {
               <ul className="space-y-4">
                 <li className="flex items-start gap-3">
                   <Mail size={16} className="text-electric mt-0.5 shrink-0" />
-                  <a href="mailto:rbesagre@gmail.com" className="text-muted text-sm hover:text-white transition-colors">rbesagre@gmail.com</a>
+                  <a href="mailto:support@getoutloop.com" className="text-muted text-sm hover:text-white transition-colors">support@getoutloop.com</a>
                 </li>
                 <li className="flex items-start gap-3">
                   <Phone size={16} className="text-electric mt-0.5 shrink-0" />

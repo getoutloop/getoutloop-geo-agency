@@ -47,12 +47,12 @@ export default function PrivacyPolicyPage() {
 
           <section>
             <h2 className="font-syne font-bold text-xl text-white mb-3">6. Your Rights</h2>
-            <p>You have the right to request access to, correction of, or deletion of any personal data we hold about you. Contact us at <a href="mailto:rbesagre@gmail.com" className="text-[#00A8FF] hover:underline">rbesagre@gmail.com</a> to exercise these rights.</p>
+            <p>You have the right to request access to, correction of, or deletion of any personal data we hold about you. Contact us at <a href="mailto:support@getoutloop.com" className="text-[#00A8FF] hover:underline">support@getoutloop.com</a> to exercise these rights.</p>
           </section>
 
           <section>
             <h2 className="font-syne font-bold text-xl text-white mb-3">7. Contact</h2>
-            <p>For privacy-related inquiries: <a href="mailto:rbesagre@gmail.com" className="text-[#00A8FF] hover:underline">rbesagre@gmail.com</a><br />GetOutLoop, Johor Bahru, Malaysia</p>
+            <p>For privacy-related inquiries: <a href="mailto:support@getoutloop.com" className="text-[#00A8FF] hover:underline">support@getoutloop.com</a><br />GetOutLoop, Johor Bahru, Malaysia</p>
           </section>
         </div>
       </div>

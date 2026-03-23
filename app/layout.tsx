@@ -86,7 +86,7 @@ const organizationSchema = {
     '@type': 'ContactPoint',
     telephone: '+60174980981',
     contactType: 'customer service',
-    email: 'rbesagre@gmail.com',
+    email: 'support@getoutloop.com',
     availableLanguage: 'English',
   },
   areaServed: [

@@ -52,7 +52,7 @@ export default function TermsOfServicePage() {
 
           <section>
             <h2 className="font-syne font-bold text-xl text-white mb-3">8. Contact</h2>
-            <p>For terms-related inquiries: <a href="mailto:rbesagre@gmail.com" className="text-[#00A8FF] hover:underline">rbesagre@gmail.com</a></p>
+            <p>For terms-related inquiries: <a href="mailto:support@getoutloop.com" className="text-[#00A8FF] hover:underline">support@getoutloop.com</a></p>
           </section>
         </div>
       </div>

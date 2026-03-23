@@ -42,10 +42,10 @@ const faqCategories = [
     category: 'Pricing & Coverage',
     faqs: [
       { q: 'Is the free audit really free?', a: 'Yes — completely free, no credit card, no commitment. We offer it because it demonstrates our methodology and builds trust. Many clients start free and upgrade to PRO or Complete after seeing the value of the report.' },
-      { q: 'Do you offer annual pricing?', a: 'Yes. Contact us for annual billing: Annual PRO is $1,080/yr (save $360 vs monthly). Annual Complete is $4,320/yr (save $1,440). Email rbesagre@gmail.com to arrange.' },
+      { q: 'Do you offer annual pricing?', a: 'Yes. Contact us for annual billing: Annual PRO is $1,080/yr (save $360 vs monthly). Annual Complete is $4,320/yr (save $1,440). Email support@getoutloop.com to arrange.' },
       { q: 'Do you serve clients outside Malaysia?', a: 'Yes. GetOutLoop serves clients globally. We work fully remote and have served clients in Singapore, Philippines, Australia, and the USA. Time zones are not a barrier.' },
       { q: 'What industries do you work with?', a: 'GEO is industry-agnostic. The 8-dimension audit framework applies to any business with a website — SaaS, professional services, e-commerce, healthcare, hospitality, education, and more. If AI is being used to discover your industry, GEO matters.' },
-      { q: 'What if I\'m not satisfied with the audit quality?', a: 'We stand behind our work. If you believe the audit missed something significant or the score is inaccurate, contact us and we will review and revise it. Your email: rbesagre@gmail.com.' },
+      { q: 'What if I\'m not satisfied with the audit quality?', a: 'We stand behind our work. If you believe the audit missed something significant or the score is inaccurate, contact us and we will review and revise it. Your email: support@getoutloop.com.' },
     ],
   },
 ]
@@ -99,7 +99,7 @@ export default function FaqPage() {
       <section className="section-padding" style={{ background: '#0D1429' }}>
         <div className="section-container text-center max-w-xl mx-auto">
           <h2 className="font-syne font-bold text-2xl text-white mb-4">Still have questions?</h2>
-          <p className="text-muted mb-8">Email us at <a href="mailto:rbesagre@gmail.com" className="text-electric hover:underline">rbesagre@gmail.com</a> or start with a free audit.</p>
+          <p className="text-muted mb-8">Email us at <a href="mailto:support@getoutloop.com" className="text-electric hover:underline">support@getoutloop.com</a> or start with a free audit.</p>
           <Link href="/audit" className="btn-primary px-8 py-3.5">Get Free GEO Audit</Link>
         </div>
       </section>

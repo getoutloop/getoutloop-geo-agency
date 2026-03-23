@@ -79,8 +79,8 @@ export default function Footer() {
             <h3 className="font-syne font-semibold text-white text-sm mb-4 uppercase tracking-widest">Contact</h3>
             <ul className="space-y-3 mb-6">
               <li>
-                <a href="mailto:rbesagre@gmail.com" className="text-muted text-sm hover:text-white transition-colors">
-                  rbesagre@gmail.com
+                <a href="mailto:support@getoutloop.com" className="text-muted text-sm hover:text-white transition-colors">
+                  support@getoutloop.com
                 </a>
               </li>
               <li>
