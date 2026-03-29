@@ -120,7 +120,7 @@ export default function AuditPage() {
                 <div>
                   <label className={labelClass}>Website URL *</label>
                   <input name="website" type="text" required value={form.website} onChange={handleChange}
-                    placeholder="yourwebsite.com or https://yourwebsite.com" className={inputClass} style={inputStyle} />
+                    placeholder="yourwebsite.com or https://yourwebsite.com" className={inputClass} style={inputStyle} autoComplete="url" />
                 </div>
                 <div>
                   <label className={labelClass}>Company</label>

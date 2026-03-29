@@ -115,10 +115,6 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center bg-grid-pattern overflow-hidden">
-        {/* Glow orb — subtle blue only, top-left behind headline */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full opacity-8 blur-3xl pointer-events-none"
-          style={{ background: 'radial-gradient(circle, #00A8FF, transparent)' }} />
-
         <div className="section-container relative z-10 pt-28 pb-20">
           <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-12">
 
