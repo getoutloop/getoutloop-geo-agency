@@ -1,7 +1,8 @@
 import Link from 'next/link'
 
 const serviceLinks = [
-  { href: '/services/seo-geo-consulting', label: 'GEO Audit & Strategy' },
+  { href: '/services#geo-audit', label: 'GEO Audit & Strategy' },
+  { href: '/reputation', label: 'Reputation Management' },
   { href: '/pricing', label: 'Pricing Plans' },
   { href: '/audit', label: 'Self-Service Audit' },
   { href: '/geo-explained', label: 'What is GEO?' },

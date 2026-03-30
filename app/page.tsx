@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, CheckCircle, Zap, BarChart3, Search, Bot, Shield, Globe } from 'lucide-react'
+import { ArrowRight, CheckCircle, Zap, BarChart3, Search, Bot, Shield, Globe, Star } from 'lucide-react'
 import AICitationFeed from '@/components/ui/AICitationFeed'
 
 export const metadata: Metadata = {
@@ -247,8 +247,58 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing Tiers */}
+      {/* Services Overview */}
       <section className="section-padding" style={{ background: '#0A0E27' }}>
+        <div className="section-container max-w-5xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="label-tag mb-3">Our Services</div>
+            <h2 className="font-syne font-bold text-3xl md:text-4xl text-white">
+              Get Found. Look Great. Win in AI Search.
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="glass-card electric-border p-7 flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl" style={{ background: 'rgba(0,168,255,0.1)' }}>
+                  <BarChart3 size={22} className="text-electric" />
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted/60 uppercase tracking-widest font-inter">Service 01</div>
+                  <h3 className="font-syne font-bold text-white text-lg">GEO Audit</h3>
+                </div>
+              </div>
+              <p className="text-muted text-sm leading-relaxed">
+                8-dimension AI visibility audit. Find out why ChatGPT, Perplexity, and Gemini are ignoring your
+                business — and get a scored, prioritized fix plan.
+              </p>
+              <Link href="/services#geo-audit" className="text-electric text-sm hover:underline font-inter flex items-center gap-1 mt-auto">
+                Learn more <ArrowRight size={13} />
+              </Link>
+            </div>
+            <div className="glass-card p-7 flex flex-col gap-4" style={{ border: '1px solid rgba(168,85,247,0.3)' }}>
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl" style={{ background: 'rgba(168,85,247,0.1)' }}>
+                  <Star size={22} style={{ color: '#A855F7' }} />
+                </div>
+                <div>
+                  <div className="text-[10px] text-muted/60 uppercase tracking-widest font-inter">Service 02</div>
+                  <h3 className="font-syne font-bold text-white text-lg">Reputation Management</h3>
+                </div>
+              </div>
+              <p className="text-muted text-sm leading-relaxed">
+                Audit your reviews, brand mentions, and AI perception. Find out what ChatGPT says about your brand
+                today — then control the narrative.
+              </p>
+              <Link href="/reputation" className="text-sm hover:underline font-inter flex items-center gap-1 mt-auto" style={{ color: '#A855F7' }}>
+                Learn more <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Tiers */}
+      <section className="section-padding" style={{ background: '#0D1429' }}>
         <div className="section-container">
           <div className="text-center mb-14">
             <div className="label-tag mb-3">Transparent Pricing</div>
@@ -331,7 +381,7 @@ export default function HomePage() {
       </section>
 
       {/* Why GetOutLoop */}
-      <section className="section-padding" style={{ background: '#0D1429' }}>
+      <section className="section-padding" style={{ background: '#0A0E27' }}>
         <div className="section-container">
           <div className="text-center mb-12">
             <div className="label-tag mb-3">Why GetOutLoop</div>
