@@ -10,6 +10,17 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: 'best-geo-agency-singapore-2026',
+    category: 'Singapore',
+    categoryColor: '#00A8FF',
+    title: 'Best GEO Agency Singapore 2026 — AI Search Visibility Specialists',
+    excerpt:
+      'Singapore has Southeast Asia\'s highest AI tool adoption. When buyers use ChatGPT or Perplexity to find vendors, which businesses appear? A complete guide to GEO for Singapore businesses.',
+    date: 'April 6, 2026',
+    dateTime: '2026-04-06',
+    readTime: '11 min read',
+  },
+  {
     slug: 'best-geo-agency-malaysia-2026',
     category: 'Malaysia',
     categoryColor: '#00A8FF',

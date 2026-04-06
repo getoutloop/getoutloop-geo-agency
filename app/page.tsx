@@ -4,8 +4,8 @@ import { ArrowRight, CheckCircle, Zap, BarChart3, Search, Bot, Shield, Globe, St
 import AICitationFeed from '@/components/ui/AICitationFeed'
 
 export const metadata: Metadata = {
-  title: 'GetOutLoop | Specialist GEO Agency — AI Search Visibility',
-  description: 'Get Cited by AI. Get Found by Everyone. GetOutLoop delivers GEO audits that reveal exactly why ChatGPT, Perplexity, and Gemini are ignoring your business — and how to fix it.',
+  title: 'GetOutLoop | Specialist GEO Agency — Malaysia, Singapore & APAC',
+  description: 'Get Cited by AI. Get Found by Everyone. GetOutLoop delivers GEO audits for businesses in Malaysia, Singapore, and APAC — revealing exactly why ChatGPT, Perplexity, and Gemini ignore your business.',
   alternates: { canonical: 'https://getoutloop.com' },
 }
 
@@ -91,7 +91,7 @@ const whyItems = [
   {
     icon: <Shield size={22} />,
     title: 'APAC Expertise',
-    desc: '24+ years of regional technology experience across Malaysia, Singapore, Philippines.',
+    desc: '24+ years of APAC technology experience across Malaysia, Singapore, Philippines, and Australia. Based in Johor Bahru — 30 min from Singapore CBD.',
   },
   {
     icon: <Zap size={22} />,
@@ -172,7 +172,7 @@ export default function HomePage() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 glass-card px-4 py-2 mb-8 rounded-full electric-border">
                 <span className="w-2 h-2 rounded-full animate-pulse-slow" style={{ background: '#00FF9D' }} />
-                <span className="label-tag">GEO Agency · APAC & Global</span>
+                <span className="label-tag">GEO Agency · Malaysia & Singapore · APAC</span>
               </div>
 
               <h1 className="font-syne font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
@@ -428,6 +428,33 @@ export default function HomePage() {
             <Link href="/pricing" className="text-electric text-sm hover:underline font-inter">
               Compare all plan features →
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Markets Banner */}
+      <section style={{ background: '#060917', borderTop: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <div className="section-container py-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-sm text-center">
+            <span className="text-muted font-inter">Serving businesses in:</span>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <Link href="/blog/best-geo-agency-malaysia-2026" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-white/5 transition-colors" style={{ border: '1px solid rgba(255,255,255,0.1)' }}>
+                <span>🇲🇾</span><span className="text-white font-inter text-xs font-semibold">Malaysia</span>
+              </Link>
+              <Link href="/geo-singapore" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-white/5 transition-colors" style={{ border: '1px solid rgba(0,168,255,0.3)', background: 'rgba(0,168,255,0.05)' }}>
+                <span>🇸🇬</span><span className="text-electric font-inter text-xs font-semibold">Singapore</span>
+              </Link>
+              {[
+                { flag: '🇵🇭', label: 'Philippines' },
+                { flag: '🇦🇺', label: 'Australia' },
+                { flag: '🇺🇸', label: 'USA' },
+                { flag: '🌏', label: 'APAC & Global' },
+              ].map((m) => (
+                <span key={m.label} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ border: '1px solid rgba(255,255,255,0.07)' }}>
+                  <span>{m.flag}</span><span className="text-muted font-inter text-xs">{m.label}</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
