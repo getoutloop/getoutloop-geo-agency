@@ -109,6 +109,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/blog/best-geo-agency-apac-2026`,
+      lastModified: newPageDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/blog/best-geo-agency-malaysia-2026`,
       lastModified: newPageDate,
       changeFrequency: 'monthly',

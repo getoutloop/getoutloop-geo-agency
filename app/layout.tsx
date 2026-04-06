@@ -4,6 +4,7 @@ import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
+import CookieBanner from '@/components/ui/CookieBanner'
 
 const syne = Syne({
   subsets: ['latin'],
@@ -165,6 +166,8 @@ const organizationSchema = {
   sameAs: [
     'https://www.linkedin.com/in/ronnelbesagredotcom',
     'https://ronnelbesagre.com',
+    'https://www.facebook.com/getoutloop',
+    'https://twitter.com/getoutloop',
   ],
 }
 
@@ -212,6 +215,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <CookieBanner />
       </body>
     </html>
   )

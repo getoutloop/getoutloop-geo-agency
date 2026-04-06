@@ -10,6 +10,17 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: 'best-geo-agency-apac-2026',
+    category: 'APAC',
+    categoryColor: '#00FF9D',
+    title: 'Best GEO Agency APAC 2026 — AI Search Visibility for Asia-Pacific',
+    excerpt:
+      'APAC leads globally in AI tool adoption. When buyers across Malaysia, Singapore, Australia, and the Philippines use ChatGPT to find vendors, which businesses appear? A complete regional GEO guide.',
+    date: 'April 6, 2026',
+    dateTime: '2026-04-06',
+    readTime: '12 min read',
+  },
+  {
     slug: 'best-geo-agency-singapore-2026',
     category: 'Singapore',
     categoryColor: '#00A8FF',
