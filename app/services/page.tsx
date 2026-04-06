@@ -16,7 +16,7 @@ const geoAuditDimensions = [
   { num: '05', name: 'Brand Authority', desc: 'External citations, directory listings, entity recognition' },
   { num: '06', name: 'Platform Citations', desc: 'ChatGPT, Perplexity, Claude, Gemini, Copilot' },
   { num: '07', name: 'llms.txt Presence', desc: 'AI content navigation file — the sitemap for AI crawlers' },
-  { num: '08', name: 'Competitor Gap', desc: 'What competitors do that you don't — citation gap analysis' },
+  { num: '08', name: 'Competitor Gap', desc: "What competitors do that you don't — citation gap analysis" },
 ]
 
 const repDimensions = [
