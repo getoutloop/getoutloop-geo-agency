@@ -21,14 +21,22 @@ export default function ContactPage() {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  const normalizeUrl = (url: string): string => {
+    const trimmed = url.trim()
+    if (!trimmed) return trimmed
+    if (/^https?:\/\//i.test(trimmed)) return trimmed
+    return `https://${trimmed}`
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setStatus('sending')
     try {
+      const payload = { ...form, website: normalizeUrl(form.website), timestamp: new Date().toISOString(), source: 'getoutloop.com/contact' }
       const res = await fetch(WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, timestamp: new Date().toISOString(), source: 'getoutloop.com/contact' }),
+        body: JSON.stringify(payload),
       })
       setStatus(res.ok ? 'success' : 'error')
     } catch {
@@ -82,8 +90,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label className={labelClass}>Website URL</label>
-                    <input name="website" type="url" value={form.website} onChange={handleChange}
-                      placeholder="https://yourwebsite.com" className={inputClass} style={inputStyle} />
+                    <input name="website" type="text" value={form.website} onChange={handleChange}
+                      placeholder="yourwebsite.com" className={inputClass} style={inputStyle} />
                   </div>
                 </div>
                 <div>
