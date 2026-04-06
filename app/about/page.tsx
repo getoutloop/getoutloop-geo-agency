@@ -3,8 +3,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export const metadata: Metadata = {
-  title: 'About GetOutLoop — GEO-as-a-Service Agency | APAC & Global',
-  description: 'GetOutLoop is a GEO-as-a-Service agency helping businesses get cited by AI search engines — ChatGPT, Perplexity, Google AI Overviews, Gemini, and Copilot. Based in APAC, serving globally.',
+  title: 'About GetOutLoop — Specialist GEO Agency | APAC & Global',
+  description: 'GetOutLoop is a specialist GEO agency helping businesses get cited by AI search engines — ChatGPT, Perplexity, Google AI Overviews, Gemini, and Copilot. Based in APAC, serving globally.',
   alternates: { canonical: 'https://getoutloop.com/about' },
 }
 
@@ -58,7 +58,7 @@ const agencySchema = {
   name: 'GetOutLoop',
   url: 'https://getoutloop.com',
   logo: 'https://getoutloop.com/og-image.png',
-  description: 'GetOutLoop is a GEO-as-a-Service agency specializing in Generative Engine Optimization — helping businesses get cited by AI search engines across APAC and globally.',
+  description: 'GetOutLoop is a specialist GEO agency specializing in Generative Engine Optimization — helping businesses get cited by AI search engines across APAC and globally.',
   foundingDate: '2026',
   areaServed: ['MY', 'SG', 'PH', 'AU', 'US', 'Global'],
   founder: {
@@ -89,7 +89,7 @@ export default function AboutPage() {
             We Get Businesses <span className="gradient-text">Cited by AI.</span>
           </h1>
           <p className="text-muted text-lg max-w-2xl mx-auto leading-relaxed">
-            GetOutLoop is a GEO-as-a-Service agency helping businesses across APAC and globally appear inside ChatGPT,
+            GetOutLoop is a specialist GEO agency helping businesses across APAC and globally appear inside ChatGPT,
             Perplexity, Google AI Overviews, Gemini, and every AI answer engine that matters.
           </p>
         </div>

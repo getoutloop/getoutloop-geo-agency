@@ -21,7 +21,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://getoutloop.com'),
   title: {
-    default: 'GetOutLoop | GEO-as-a-Service — AI Search Visibility Agency',
+    default: 'GetOutLoop | Specialist GEO Agency — AI Search Visibility',
     template: '%s | GetOutLoop',
   },
   description: 'GetOutLoop helps businesses win in AI search — GEO Audit to get cited by ChatGPT and Perplexity, and Reputation Management to control what AI says about your brand. Serving APAC and globally.',
@@ -42,15 +42,15 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://getoutloop.com',
     siteName: 'GetOutLoop',
-    title: 'GetOutLoop | GEO-as-a-Service — AI Search Visibility Agency',
+    title: 'GetOutLoop | Specialist GEO Agency — AI Search Visibility',
     description: 'Get Cited by AI. Get Found by Everyone. GEO audits that reveal exactly why ChatGPT, Perplexity, and Gemini are ignoring your business.',
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'GetOutLoop — GEO-as-a-Service Agency' }],
+    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'GetOutLoop — Specialist GEO Agency' }],
   },
   twitter: {
     card: 'summary_large_image',
     site: '@getoutloop',
     creator: '@getoutloop',
-    title: 'GetOutLoop | GEO-as-a-Service — AI Search Visibility Agency',
+    title: 'GetOutLoop | Specialist GEO Agency — AI Search Visibility',
     description: 'Get Cited by AI. Get Found by Everyone.',
     images: ['/og-image.jpg'],
   },
@@ -70,7 +70,7 @@ const organizationSchema = {
     url: 'https://getoutloop.com/getoutloop-logo.svg',
   },
   slogan: 'Get Cited by AI. Get Found by Everyone.',
-  description: 'GetOutLoop is a GEO-as-a-Service agency helping businesses get cited in ChatGPT, Perplexity, Claude, Google AI Overviews, and Microsoft Copilot.',
+  description: 'GetOutLoop is a specialist GEO agency helping businesses get cited in ChatGPT, Perplexity, Claude, Google AI Overviews, and Microsoft Copilot.',
   foundingDate: '2026',
   founder: {
     '@type': 'Person',
@@ -173,7 +173,7 @@ const websiteSchema = {
   '@id': 'https://getoutloop.com/#website',
   name: 'GetOutLoop',
   url: 'https://getoutloop.com',
-  description: 'GEO-as-a-Service agency for AI search visibility',
+  description: 'Specialist GEO agency for AI search visibility',
   publisher: { '@id': 'https://getoutloop.com/#agency' },
 }
 

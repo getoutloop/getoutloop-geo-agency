@@ -68,7 +68,7 @@ export default function Navbar() {
             </div>
             <div className="hidden sm:block">
               <div className="font-syne font-bold text-white text-lg leading-tight">GetOutLoop</div>
-              <div className="text-[10px] text-muted font-inter tracking-widest uppercase">GEO-as-a-Service</div>
+              <div className="text-[10px] text-muted font-inter tracking-widest uppercase">AI Visibility Agency</div>
             </div>
           </Link>
 

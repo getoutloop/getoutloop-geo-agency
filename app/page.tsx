@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle, Zap, BarChart3, Search, Bot, Shield, Globe, St
 import AICitationFeed from '@/components/ui/AICitationFeed'
 
 export const metadata: Metadata = {
-  title: 'GetOutLoop | GEO-as-a-Service — AI Search Visibility Agency',
+  title: 'GetOutLoop | Specialist GEO Agency — AI Search Visibility',
   description: 'Get Cited by AI. Get Found by Everyone. GetOutLoop delivers GEO audits that reveal exactly why ChatGPT, Perplexity, and Gemini are ignoring your business — and how to fix it.',
   alternates: { canonical: 'https://getoutloop.com' },
 }
@@ -123,7 +123,7 @@ export default function HomePage() {
               {/* Badge */}
               <div className="inline-flex items-center gap-2 glass-card px-4 py-2 mb-8 rounded-full electric-border">
                 <span className="w-2 h-2 rounded-full animate-pulse-slow" style={{ background: '#00FF9D' }} />
-                <span className="label-tag">GEO-as-a-Service · APAC & Global</span>
+                <span className="label-tag">GEO Agency · APAC & Global</span>
               </div>
 
               <h1 className="font-syne font-bold text-5xl md:text-6xl lg:text-7xl leading-[1.05] mb-6">
