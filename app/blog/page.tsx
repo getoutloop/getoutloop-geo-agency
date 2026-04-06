@@ -10,6 +10,17 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: 'best-geo-agency-malaysia-2026',
+    category: 'Malaysia',
+    categoryColor: '#00A8FF',
+    title: 'Best GEO Agency Malaysia 2026 — AI Search Visibility Specialists',
+    excerpt:
+      'What makes a credible GEO agency, why Malaysian businesses need AI search visibility in 2026, and how GetOutLoop delivers expert-led GEO audits across 8 dimensions for APAC clients.',
+    date: 'April 6, 2026',
+    dateTime: '2026-04-06',
+    readTime: '10 min read',
+  },
+  {
     slug: 'understanding-seo-geo-aeo',
     category: 'Strategy',
     categoryColor: '#00FF9D',

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, CheckCircle, Zap, BarChart3, Search, Bot, Shield, Globe, Star } from 'lucide-react'
+import { ArrowRight, CheckCircle, Zap, BarChart3, Search, Bot, Shield, Globe, Star, ChevronDown } from 'lucide-react'
 import AICitationFeed from '@/components/ui/AICitationFeed'
 
 export const metadata: Metadata = {
@@ -110,9 +110,58 @@ const whyItems = [
   },
 ]
 
+const faqItems = [
+  {
+    q: 'What is GEO (Generative Engine Optimization)?',
+    a: 'GEO is the systematic process of optimizing your website so AI platforms — ChatGPT, Perplexity, Claude, Google AI Overviews, and Microsoft Copilot — can find, understand, and cite your business in their generated answers. Unlike SEO which targets ranking positions, GEO targets citation frequency inside AI responses.',
+  },
+  {
+    q: 'How much does a GEO audit cost?',
+    a: 'GetOutLoop offers three tiers: GEO Free ($0) delivers a GEO score and top 5 critical issues by email within 24 hours. GEO PRO is $120/month and includes a full 8-section PDF report with priority action matrix. GEO Complete is $480/month and adds copy-paste fix code, schema templates, robots.txt updates, llms.txt implementation, and a monthly strategy call.',
+  },
+  {
+    q: 'How long does GEO optimization take to show results?',
+    a: 'Technical improvements — robots.txt, structured data, and llms.txt — typically take effect within 2–4 weeks. Consistent Perplexity citations usually appear within 4–8 weeks. ChatGPT and Claude citations can take 3–9 months due to longer model retraining cycles.',
+  },
+  {
+    q: 'Is the free GEO audit really free?',
+    a: 'Yes — completely free, no credit card, no commitment required. The free audit delivers your GEO score (0–100) and top 5 critical issues by email within 24 hours. It is designed to demonstrate the methodology and show you exactly where your AI visibility gaps are before any paid engagement.',
+  },
+  {
+    q: 'Which AI platforms does GetOutLoop audit for?',
+    a: 'GetOutLoop audits AI visibility across five major platforms: ChatGPT (OpenAI), Perplexity AI, Google Gemini / AI Overviews, Claude (Anthropic), and Microsoft Copilot (Bing). Each platform has different citation signals and the audit evaluates all five.',
+  },
+  {
+    q: 'Do you serve businesses outside Malaysia?',
+    a: 'Yes. GetOutLoop serves clients globally, fully remote. The agency is headquartered in Johor Bahru, Malaysia, with active clients in Singapore, Philippines, Australia, and the USA. All audits are conducted remotely using only publicly accessible website data.',
+  },
+  {
+    q: 'What is the difference between GEO, SEO, and AEO?',
+    a: 'SEO (Search Engine Optimization) targets Google ranking positions using keywords and backlinks. AEO (Answer Engine Optimization) targets featured snippets and direct answer boxes in traditional search. GEO (Generative Engine Optimization) targets citation frequency inside AI-generated responses — it is the newest discipline and addresses a fundamentally different mechanism than SEO or AEO.',
+  },
+  {
+    q: 'What is Share of AI Voice (SAV)?',
+    a: 'Share of AI Voice (SAV) is the primary GEO performance metric. It measures what percentage of relevant AI-generated responses mention your brand versus your competitors. For example, if 3 out of 10 AI answers about "GEO agencies in Malaysia" mention your business, your SAV is 30%. GetOutLoop tracks SAV across all five major AI platforms.',
+  },
+]
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqItems.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+}
+
 export default function HomePage() {
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center bg-grid-pattern overflow-hidden">
         <div className="section-container relative z-10 pt-28 pb-20">
@@ -205,7 +254,10 @@ export default function HomePage() {
                 <li>ChatGPT recommends your competitors by name</li>
                 <li>Perplexity cites industry articles — never your site</li>
                 <li>Google AI Overviews pull from other sources</li>
-                <li>65% of searches end without a click — you get nothing</li>
+                <li>
+                  65% of searches end without a click — you get nothing{' '}
+                  <a href="https://sparktoro.com/blog/2024-zero-click-search-study/" target="_blank" rel="noopener noreferrer" className="text-xs opacity-50 hover:opacity-80" style={{ color: '#B0B8C8' }}>[SparkToro]</a>
+                </li>
               </ul>
             </div>
             <div className="glass-card p-7 neon-border">
@@ -432,8 +484,38 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Banner */}
+      {/* FAQ Section */}
       <section className="section-padding" style={{ background: '#0D1429' }}>
+        <div className="section-container max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <div className="label-tag mb-3">FAQ</div>
+            <h2 className="font-syne font-bold text-3xl md:text-4xl text-white">
+              Common Questions About GEO
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {faqItems.map((item, i) => (
+              <details key={i} className="glass-card group" style={{ border: '1px solid rgba(255,255,255,0.06)' }}>
+                <summary className="flex items-center justify-between gap-4 p-5 cursor-pointer list-none">
+                  <span className="font-syne font-semibold text-white text-sm leading-snug">{item.q}</span>
+                  <ChevronDown size={16} className="text-muted shrink-0 group-open:rotate-180 transition-transform duration-200" />
+                </summary>
+                <div className="px-5 pb-5 text-muted text-sm leading-relaxed border-t" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
+                  <p className="pt-4">{item.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link href="/faq" className="text-electric text-sm hover:underline font-inter">
+              View all FAQ answers →
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Banner */}
+      <section className="section-padding" style={{ background: '#0A0E27' }}>
         <div className="section-container">
           <div
             className="glass-card electric-border rounded-2xl p-10 md:p-14 text-center max-w-3xl mx-auto"
