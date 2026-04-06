@@ -3,6 +3,7 @@ import { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://getoutloop.com'
   const lastModified = new Date('2026-03-22')
+  const newPageDate = new Date('2026-04-06')
 
   return [
     {
@@ -108,10 +109,28 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      url: `${baseUrl}/blog/best-geo-agency-malaysia-2026`,
+      lastModified: newPageDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/blog/best-geo-agency-singapore-2026`,
+      lastModified: newPageDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
+    },
+    {
       url: `${baseUrl}/blog/robots-txt-ai-crawlers-guide`,
       lastModified,
       changeFrequency: 'monthly',
       priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/geo-singapore`,
+      lastModified: newPageDate,
+      changeFrequency: 'monthly',
+      priority: 0.9,
     },
     {
       url: `${baseUrl}/faq`,

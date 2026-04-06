@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Syne, Inter } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
     siteName: 'GetOutLoop',
     title: 'GetOutLoop | Specialist GEO Agency — AI Search Visibility',
     description: 'Get Cited by AI. Get Found by Everyone. GEO audits that reveal exactly why ChatGPT, Perplexity, and Gemini are ignoring your business.',
-    images: [{ url: '/og-image.jpg', width: 1200, height: 630, alt: 'GetOutLoop — Specialist GEO Agency' }],
+    images: [{ url: '/og-image.svg', width: 1200, height: 630, alt: 'GetOutLoop — Specialist GEO Agency | Malaysia & Singapore' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     creator: '@getoutloop',
     title: 'GetOutLoop | Specialist GEO Agency — AI Search Visibility',
     description: 'Get Cited by AI. Get Found by Everyone.',
-    images: ['/og-image.jpg'],
+    images: ['/og-image.svg'],
   },
   alternates: {
     canonical: 'https://getoutloop.com',
@@ -188,6 +189,23 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        {/*
+          CookieYes consent banner — GDPR / AU Privacy Act / PDPA compliance
+          ─────────────────────────────────────────────────────────────────────
+          SETUP STEPS (one-time, ~5 minutes):
+          1. Go to https://www.cookieyes.com → Sign Up (free)
+          2. Add domain: getoutloop.com
+          3. Copy your Site ID from Dashboard → Settings → Script
+             It looks like: cdn-cookieyes.com/client_data/XXXXXXXXXXXXXXXX/script.js
+          4. Replace YOUR_COOKIEYES_SITE_ID below with that ID
+          5. git commit & push — the banner goes live immediately
+          ─────────────────────────────────────────────────────────────────────
+        */}
+        <Script
+          id="cookieyes"
+          src="https://cdn-cookieyes.com/client_data/YOUR_COOKIEYES_SITE_ID/script.js"
+          strategy="afterInteractive"
         />
       </head>
       <body>
